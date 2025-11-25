@@ -1,18 +1,20 @@
+// frontend/src/App.jsx
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Layout from './components/Layout/Layout';
-import HomePage from './pages/HomePage';
-import Tasks from './pages/Tasks';
+import NoteCreation from './components/NoteCreation';
+import NoteEditor from './components/NoteEditor';
 
-const App = () => {
+
+function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<HomePage />} />
-          <Route path="tasks/:boardId" element={<Tasks />} />
-        </Route>
-      </Routes>
-    </Router>
+      <Router>
+        <div className="App">
+          <Routes>
+            <Route path="/" element={<NoteCreation />} />
+            <Route path="/note/:id" element={<NoteEditor />} />
+          </Routes>
+        </div>
+      </Router>
   );
 }
 

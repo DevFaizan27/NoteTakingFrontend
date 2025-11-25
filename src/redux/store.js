@@ -1,15 +1,20 @@
+// frontend/src/store/store.js
 import { configureStore } from '@reduxjs/toolkit';
-import apiSlice from './slices/apiSlice';
+// import { notesApi } from './api/notesApi.js';
+import noteEditorReducer from './slices/noteEditorSlice.js';
+import { notesApi } from './slices/notesApi.js';
 
-const store = configureStore({
-    reducer: {
-        [apiSlice.reducerPath]: apiSlice.reducer,  // Reducer for cityApi
-        // [shopApi.reducerPath]: shopApi.reducer,  // Reducer for shopApi
-    },
-    middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware()
-            .concat(apiSlice.middleware)  // Include  middleware
-
-        });
+export const store = configureStore({
+  reducer: {
+    noteEditor: noteEditorReducer,
+    [notesApi.reducerPath]: notesApi.reducer,
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: ['persist/PERSIST'],
+      },
+    }).concat(notesApi.middleware),
+});
 
 export default store;
