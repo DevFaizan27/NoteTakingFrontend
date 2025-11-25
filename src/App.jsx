@@ -3,16 +3,21 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import NoteCreation from './components/NoteCreation';
 import NoteEditor from './components/NoteEditor';
+import Dashboard from './components/Dashboard';
 
 
 function App() {
   return (
       <Router>
         <div className="App">
-          <Routes>
-            <Route path="/" element={<NoteCreation />} />
+                  <Routes>
+                     <Route path="" element={<Dashboard/>} >
+           <Route path="/" element={<NoteCreation />} />
             <Route path="/note/:id" element={<NoteEditor />} />
-          </Routes>
+          </Route>
+                  </Routes>
+         
+        
         </div>
       </Router>
   );

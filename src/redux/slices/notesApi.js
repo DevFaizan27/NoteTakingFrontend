@@ -6,15 +6,16 @@ export const notesApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: import.meta.env.VITE_BACKEND_HOST_URL || 'http://localhost:4000/api',
   }),
-  tagTypes: ['Note'],
+  tagTypes: ['Note', 'NotesList'],
   endpoints: (builder) => ({
+    // Existing endpoints...
     createNote: builder.mutation({
       query: (noteData) => ({
         url: '/notes',
         method: 'POST',
         body: noteData,
       }),
-      invalidatesTags: ['Note'],
+      invalidatesTags: ['NotesList'],
     }),
     
     getNote: builder.query({
@@ -28,7 +29,31 @@ export const notesApi = createApi({
         method: 'PUT',
         body: patch,
       }),
-      invalidatesTags: (result, error, { id }) => [{ type: 'Note', id }],
+      invalidatesTags: (result, error, { id }) => [
+        { type: 'Note', id },
+        'NotesList'
+      ],
+    }),
+
+    // New endpoints for notes list
+    getAllNotes: builder.query({
+      query: ({ page = 1, limit = 10, sortBy = 'updatedAt', sortOrder = 'desc' } = {}) => 
+        `/notes?page=${page}&limit=${limit}&sortBy=${sortBy}&sortOrder=${sortOrder}`,
+      providesTags: ['NotesList'],
+    }),
+
+    searchNotes: builder.query({
+      query: ({ query, page = 1, limit = 10 }) => 
+        `/notes/search?query=${encodeURIComponent(query)}&page=${page}&limit=${limit}`,
+      providesTags: ['NotesList'],
+    }),
+
+    deleteNote: builder.mutation({
+      query: (id) => ({
+        url: `/notes/${id}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['NotesList'],
     }),
   }),
 });
@@ -37,4 +62,7 @@ export const {
   useCreateNoteMutation,
   useGetNoteQuery,
   useUpdateNoteMutation,
+  useGetAllNotesQuery,
+  useSearchNotesQuery,
+  useDeleteNoteMutation,
 } = notesApi;
